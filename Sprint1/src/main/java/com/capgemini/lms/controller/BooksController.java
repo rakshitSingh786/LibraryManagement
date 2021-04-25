@@ -1,6 +1,7 @@
 package com.capgemini.lms.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,7 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.capgemini.lms.entities.Books;
+import com.capgemini.lms.entities.BooksOrder;
 import com.capgemini.lms.exception.BookNotFoundException;
+import com.capgemini.lms.exception.PublisherNotFoundException;
 import com.capgemini.lms.service.BookService;
 
 @RestController
@@ -61,7 +64,7 @@ public class BooksController {
 	}
 	
 @DeleteMapping(value="/{bookid}")
-	public ResponseEntity<HttpStatus> deleteEmlpoyee(@PathVariable("bookid")int bookid)
+	public ResponseEntity<HttpStatus> deleteBook(@PathVariable("bookid")int bookid)
 	{
 	
 		try {
@@ -73,6 +76,5 @@ public class BooksController {
 		{
 			throw new BookNotFoundException("No book found with given value "+ bookid); 
 		}
-
 	}
 }

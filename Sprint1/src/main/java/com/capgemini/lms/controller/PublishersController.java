@@ -1,6 +1,8 @@
 package com.capgemini.lms.controller;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.Flow.Publisher;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,7 +16,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+
 import com.capgemini.lms.entities.Publishers;
+
+import com.capgemini.lms.exception.PublisherNotFoundException;
 import com.capgemini.lms.service.PublisherService;
 
 @RestController
@@ -34,26 +39,50 @@ public class PublishersController {
 
 	@GetMapping(value="/{publisherId}",produces="application/json")
 	public ResponseEntity<Publishers> getPublisherById(@PathVariable("publisherId") int publisherId){
-		return new ResponseEntity<Publishers>(publisherService.viewPublisherById(publisherId),HttpStatus.OK);
+		
+		Optional<Publishers> p= publisherService.viewPublisherById(publisherId);
+		if(p.isPresent())	
+			return new ResponseEntity<Publishers>(publisherService.viewPublisherById(publisherId).get(),HttpStatus.OK);
+		else
+			throw new PublisherNotFoundException("No publisher found with given value "+ publisherId);
 	}
 	
-@PostMapping(consumes="application/json")
+	@PostMapping(consumes="application/json")
 	public ResponseEntity<HttpStatus> addPublishers(@RequestBody Publishers publishers){
 		publisherService.addPublisher(publishers);
 		return new ResponseEntity<HttpStatus>(HttpStatus.OK);
 		
 	}
 
-@PutMapping(consumes="application/json")
+	@PutMapping(consumes="application/json")
 	public ResponseEntity<HttpStatus> modifyPublishers(@RequestBody Publishers publisher){
-		publisherService.updatePublisherDetails(publisher);
-		return new ResponseEntity<HttpStatus>(HttpStatus.OK);	
+		Optional<Publishers> p= publisherService.updatePublisherDetails(publisher);
+		if(p.isPresent())
+			return new ResponseEntity<HttpStatus>(HttpStatus.OK);
+		else
+			throw new PublisherNotFoundException("No publisher found with given value "+ publisher);
 	}
 	
-@DeleteMapping(value="/{publisherId}")
+	@DeleteMapping(value="/{publisherId}")
 	public ResponseEntity<HttpStatus> deletePublisher(@PathVariable("publisherId")int publisherId)
 	{
-		publisherService.removePublisher(publisherId);
-		return new ResponseEntity<HttpStatus>(HttpStatus.OK);
+//		try
+//		{
+//			publisherService.removePublisher(publisherId);;
+//			return new ResponseEntity<HttpStatus>(HttpStatus.OK);
+//		}	
+//		catch(Exception e)
+//		{	
+//			throw new PublisherNotFoundException("No publisher found with given value "+ publisherId);
+//		}
+		Optional<Publisher> p= (Optional)publisherService.viewPublisherById(publisherId);
+		if(p.isPresent())
+		{
+			publisherService.removePublisher(publisherId);
+			return new ResponseEntity<HttpStatus>(HttpStatus.OK);
+		}
+		else
+			throw new PublisherNotFoundException("No publisher found with given value "+publisherId);
+		
 	}
 }

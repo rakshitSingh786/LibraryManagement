@@ -2,6 +2,7 @@ package com.capgemini.lms.controller;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.Flow.Publisher;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,6 +20,7 @@ import com.capgemini.lms.entities.Books;
 import com.capgemini.lms.entities.BooksOrder;
 import com.capgemini.lms.exception.BookNotFoundException;
 import com.capgemini.lms.exception.OrderNotFoundException;
+import com.capgemini.lms.exception.PublisherNotFoundException;
 import com.capgemini.lms.service.BookService;
 import com.capgemini.lms.service.BooksOrderService;
 
@@ -64,15 +66,24 @@ public class BooksOrderController {
 @DeleteMapping(value="/{orderId}")
 	public ResponseEntity<HttpStatus> deleteOrder(@PathVariable("orderId")int orderId)
 	{
-		try
-		{
-		booksOrderService.cancelOrder(orderId);;
+//		try
+//		{
+//		booksOrderService.cancelOrder(orderId);;
+//		return new ResponseEntity<HttpStatus>(HttpStatus.OK);
+//		}
+//		catch(Exception e)
+//		{
+//			throw new OrderNotFoundException("No book order found with given value "+ orderId);
+//		}
+	
+	Optional<BooksOrder> b= (Optional)booksOrderService.viewOrderById(orderId);
+	if(b.isPresent())
+	{
+		booksOrderService.cancelOrder(orderId);
 		return new ResponseEntity<HttpStatus>(HttpStatus.OK);
-		}
-		catch(Exception e)
-		{
-			throw new OrderNotFoundException("No book found with given value "+ orderId);
-		}
+	}
+	else
+		throw new PublisherNotFoundException("No book order found with given value "+orderId);
 	}
 
 
