@@ -9,6 +9,13 @@ import org.springframework.stereotype.Service;
 import com.capgemini.lms.dao.PublisherDao;
 import com.capgemini.lms.entities.Publishers;
 
+/*********************************************************************************************************
+ * @author     Rakshit Singh
+ * Description : This is the Service Implementation class for Publishers
+ * Created Date: 22 April, 2021 
+ * Version     : v1.1.0
+ ********************************************************************************************************/
+
 @Service
 public class PublisherServiceImpl implements PublisherService {
 

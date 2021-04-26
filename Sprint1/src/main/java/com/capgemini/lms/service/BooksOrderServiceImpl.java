@@ -10,6 +10,13 @@ import com.capgemini.lms.dao.BooksOrderDao;
 import com.capgemini.lms.entities.Books;
 import com.capgemini.lms.entities.BooksOrder;
 
+/*********************************************************************************************************
+ * @author     Rakshit Singh
+ * Description : This is the Service Implementation class for Books Order
+ * Created Date: 22 April, 2021 
+ * Version     : v1.1.0
+ ********************************************************************************************************/
+
 @Service
 public class BooksOrderServiceImpl implements BooksOrderService {
 	
